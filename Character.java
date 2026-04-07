@@ -1,4 +1,5 @@
 package learn;
+import java.util.ArrayList;
 import java.util.Scanner;
 public class Character{
     private String name;
@@ -29,10 +30,13 @@ public class Character{
                 }
 }
 class Player extends Character{
+                ArrayList<String> inventory = new ArrayList<String>();
                 public Player(String p_name,int p_health){
                     super(p_name,p_health);
+                    inventory.add("Magic Potion");
+                    inventory.add("Fire Bomb");
+                    inventory.add("Golden Apple");
                 }
-                String[] inventory={"Magic Potion", "Fire Bomb", "Golden Apple"};
                 public void heal(int healAmount){
                     int newHealth=healAmount+getHealth();
                     setHealth(newHealth);
@@ -40,8 +44,8 @@ class Player extends Character{
                 }
                 public void showInventory(){
                     System.out.println("--- INVENTORY ---");
-                    for(int i=0;i<inventory.length;i++){
-                        System.out.println(i+1+"."+inventory[i]);
+                    for(int i=0;i<inventory.size();i++){
+                        System.out.println((i+1)+"."+inventory.get(i));
                     }
 }
 }
@@ -77,12 +81,15 @@ class Game{
                     p1.showInventory();
                     int n=s.nextInt();
                     n-=1;
-                    if(p1.inventory[n].equals("Magic Potion")){
+                    if(p1.inventory.get(n).equals("Magic Potion")){
                         p1.heal(25);
-                    }else if(p1.inventory[n].equals("Fire Bomb")){
+                        p1.inventory.remove(n);
+                    }else if(p1.inventory.get(n).equals("Fire Bomb")){
                         e1.takeDamage(25);
-                    }else if(p1.inventory[n].equals("Golden Apple")){
+                        p1.inventory.remove(n);
+                    }else if(p1.inventory.get(n).equals("Golden Apple")){
                         p1.heal(50);
+                        p1.inventory.remove(n);
                     }
                 }
                 if(e1.getHealth()>0){

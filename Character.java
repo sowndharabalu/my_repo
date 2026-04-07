@@ -1,12 +1,21 @@
 package learn;
 import java.util.Scanner;
 public class Character{
-    String name;
-    int health;
+    private String name;
+    private int health;
     int level=1;
     public Character(String c_name,int c_health){
         name=c_name;
         health=c_health;
+    }
+    public String getName(){
+        return name;
+    }
+    public int getHealth(){
+        return health;
+    }
+    public void setHealth(int newHealth){
+        health=newHealth;
     }
     public void takeDamage(int damageAmount){
 		    health-=damageAmount;
@@ -25,8 +34,9 @@ class Player extends Character{
                 }
                 String[] inventory={"Magic Potion", "Fire Bomb", "Golden Apple"};
                 public void heal(int healAmount){
-                    health+=healAmount;
-                    System.out.printf("%s got healed for %d! Health is now:%d%n",name,healAmount,health);
+                    int newHealth=healAmount+getHealth();
+                    setHealth(newHealth);
+                    System.out.printf("%s got healed for %d! Health is now:%d%n",getName(),healAmount,getHealth());
                 }
                 public void showInventory(){
                     System.out.println("--- INVENTORY ---");
@@ -39,6 +49,12 @@ class Enemy extends Character{
                 public Enemy(String e_name,int e_health){
                     super(e_name,e_health);
                 }
+                @Override
+                public int attack(){
+                    System.out.println("Yhe villain breathes fire!");
+                    int hit=(int)(Math.random()*(30-15+1)+15);
+                    return hit;
+                }
               
 }
 class Game{
@@ -46,7 +62,7 @@ class Game{
             Scanner s=new Scanner(System.in);
             Player p1=new Player("Hero",100);
             Enemy e1=new Enemy("villan",50);
-            while(p1.health>0 && e1.health>0){
+            while(p1.getHealth()>0 && e1.getHealth()>0){
                 System.out.println("___YOUR TURN___");
                 System.out.println("Press 1 to Attack");
                 System.out.println("Press 2 to Heal");
@@ -69,12 +85,12 @@ class Game{
                         p1.heal(50);
                     }
                 }
-                if(e1.health>0){
+                if(e1.getHealth()>0){
                     int rd=e1.attack();
                     p1.takeDamage(rd);
                 }
             }
-            if(p1.health<=0){
+            if(p1.getHealth()<=0){
                     System.out.println("Game Over! The Villain wins");
                 }else{
                     System.out.println("Victory! The Hero defeated the Villain");

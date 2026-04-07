@@ -20,6 +20,9 @@ public class Character{
                 }
 }
 class Player extends Character{
+                public Player(String p_name,int p_health){
+                    super(p_name,p_health);
+                }
                 String[] inventory={"Magic Potion", "Fire Bomb", "Golden Apple"};
                 public void heal(int healAmount){
                     health+=healAmount;
@@ -33,6 +36,9 @@ class Player extends Character{
 }
 }
 class Enemy extends Character{
+                public Enemy(String e_name,int e_health){
+                    super(e_name,e_health);
+                }
               
 }
 class Game{

@@ -110,10 +110,6 @@ class Library{
 public class Main{
     public static void main(String[] args){
         Library lib=new Library();
-        Book b1=new Book("ponniyin selvan","kalki",true);
-        Book b2=new Book("On the Origin of Species","Charles Darwin",true);
-        lib.addBooks(b1);
-        lib.addBooks(b2);
         Scanner s=new Scanner(System.in);
         boolean isTrue=true;
         while(isTrue){

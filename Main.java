@@ -56,7 +56,7 @@ class Library{
                     System.out.println("Sorry, that book is already checked out.");
                 }
             }
-        }System.out.println("Sorry, we don't have that book in our library.");
+        }System.out.println("Sorry,we don't have that book in our library.");
     }
     public boolean storeBook(String bookName){
         for(Book b:inventory){
@@ -148,6 +148,7 @@ public class Main{
                    System.out.println("sorry, invalid choice!:");
                    break;
         }
+        s.close();
         }
     }
 }

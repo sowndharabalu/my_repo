@@ -62,23 +62,17 @@ class DVD extends Media{
 class Library<T extends Media>{
     private final List<T> items=new ArrayList<>();
     public void addItem(T item) throws DuplicateItemException{
-        for(T media:items){
-            if(media.getId().equals(item.getId())){
-                throw new DuplicateItemException("Duplicate item");
-            }
+        boolean exists=items.stream().anyMatch(i->i.getId().equals(item.getId()));
+        if(exists){
+            throw new DuplicateItemException("Duplicate item: "+item.getId());
         }
         items.add(item);
     }
     public Optional<T> findById(String id){
-        for(T item:items){
-            if(item.getId().equals(id)){
-                return Optional.of(item);
-            }
-        }
-        return Optional.empty();
+        return items.stream().filter(i->i.getId().equals(id)).findFirst();
     }
     public List<T> getItemsByYear(){
-        return items.stream().sorted(Comparator.comparingInt(i-> i.getYear())).toList();
+        return items.stream().sorted(Comparator.comparingInt(Media::getYear).reversed()).toList();
     }
     public double getTotalValue(){
         return items.stream().mapToDouble(i->i.getValue()).sum();
@@ -88,14 +82,14 @@ class Library<T extends Media>{
     }
 }
 
-class DuplicateItemException extends RuntimeException{
+class DuplicateItemException extends Exception{
     public DuplicateItemException(String message){
         super(message);
     }
 }
 
 public class LMain {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws DuplicateItemException{
         Library<Media> library=new Library<>();
 
         Book b1=new Book("B1","Java Programming",2010,"Author A",500);

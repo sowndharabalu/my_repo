@@ -36,7 +36,7 @@ class Order1 {
     }
 
     public void addItem(OrderItem1 item) throws OutOfStockException,IllegalStateException {
-        if(item.isInStock()){
+        if(!item.isInStock()){
             throw new OutOfStockException("Cannot add item to stock");
         }
         if (status!=OrderStatus1.PENDING){
@@ -90,6 +90,10 @@ class Order1 {
     public List<Product1> getProductsByCategory(Category1 category){
         return items.stream().map(OrderItem1::product).filter(p->category.equals(p.category())).collect(Collectors.toList());
     }
+    @Override
+    public String toString() {
+        return "Order1[id=" + orderId + ", status=" + status + ", items=" + items.size() + ", total=" + getTotalAmount() + "]";
+    }
 }
 
 class OrderManager{
@@ -106,10 +110,10 @@ class OrderManager{
         return orders.stream().collect(Collectors.groupingBy(Order1::getStatus));
     }
     static double getAverageOrderValue(List<Order1> orders){
-        return orders.stream().mapToDouble(Order1::getTotalAmount).average().getAsDouble();
+        return orders.stream().mapToDouble(Order1::getTotalAmount).average().orElse(0.0);
     }
     static List<Order1> findOrdersWithProduct(List<Order1> orders,String productId){
-        return orders.stream().filter(o->o.getId().equals(productId)).collect(Collectors.toList());
+        return orders.stream().filter(o->o.getItems().stream().anyMatch(i->i.product().id().equals(productId))).collect(Collectors.toList());
     }
     static List<Order1> filterOrders(List<Order1> orders, Predicate<Order1> condition){
         return orders.stream().filter(condition).collect(Collectors.toList());

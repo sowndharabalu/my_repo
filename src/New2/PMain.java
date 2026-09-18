@@ -101,10 +101,10 @@ class OrderManager{
         return orders.stream().max(Comparator.comparing(Order1::getTotalAmount));
     }
     static double getTotalRevenue(List<Order1> orders){
-        return orders.stream().filter(order->order.getStatus() == OrderStatus1.SHIPPED || order.getStatus()==OrderStatus1.CONFIRMED).mapToDouble(Order1::getTotalAmount).sum();
+        return orders.stream().filter(order->order.getStatus() == OrderStatus1.SHIPPED || order.getStatus()==OrderStatus1.CONFIRMED || order.getStatus()==OrderStatus1.DELIVERED).mapToDouble(Order1::getTotalAmount).sum();
     }
     static List<Order1> sortByDate(List<Order1> orders){
-        return orders.stream().sorted(Comparator.comparing(Order1::getCreatedAt)).collect(Collectors.toList());
+        return orders.stream().sorted(Comparator.comparing(Order1::getCreatedAt).reversed()).collect(Collectors.toList());
     }
     static Map<OrderStatus1,List<Order1>> groupByStatus(List<Order1> orders){
         return orders.stream().collect(Collectors.groupingBy(Order1::getStatus));

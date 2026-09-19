@@ -83,7 +83,7 @@ class TransactionAnalyzer{
         return account.getTransactions().stream().mapToDouble(Transaction::amount).average().orElse(0.0);
     }
     static List<Transaction> filterTransactions(List<Account> accounts, Predicate<Transaction> filter){
-        return transactions.stream().filter(filter).collect(Collectors.toList());
+        return accounts.stream().flatMap(a->a.getTransactions().stream()).filter(filter).collect(Collectors.toList());
     }
 }
 

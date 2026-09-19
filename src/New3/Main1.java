@@ -1,8 +1,6 @@
 package New3;
 
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 record Student(String id, String name, int age, Set<String> entrolledCourses){}
 

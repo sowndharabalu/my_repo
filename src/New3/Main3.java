@@ -83,13 +83,14 @@ class Library<T extends LibraryItem> {
     private final List<T> items = new ArrayList<>();
 
     public void addItem(T item) throws DuplicateItemException{
-        Optional.of(item).filter(i->!items.contains(i)).orElseThrow(()->new DuplicateItemException("Item not found"));
+        Optional.of(item).filter(i->items.stream().noneMatch(exist->exist.getId().equals(i.getId()))).orElseThrow(()->new DuplicateItemException("Duplicate item: "+item.getId()));
+        items.add(item);
     }
     public Optional<T> findById(String id){
         return items.stream().filter(i->i.getId().equals(id)).findFirst();
     }
     public List<T> getItemsByYear(){
-        return items.stream().sorted(Comparator.comparingInt(LibraryItem::getYear)).toList();
+        return items.stream().sorted(Comparator.comparingInt(LibraryItem::getYear).reversed()).toList();
     }
     public double getTotalValue() {
         return items.stream().mapToDouble(LibraryItem::getValue).sum();

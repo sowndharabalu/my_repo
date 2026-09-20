@@ -29,7 +29,8 @@ class University{
     public void enroll(String std_id, String courseCode) throws EntrollmentException{
         Optional.of(std_id).filter(s->students.containsKey(s)).orElseThrow(()->new EntrollmentException("Student does not exist"));
         Optional.of(courseCode).filter(c->courses.containsKey(courseCode)).orElseThrow(()->new EntrollmentException("Course does not exist"));
-        students.get(std_id).entrolledCourses().add(courseCode);
+        Student student=students.get(std_id);
+        Optional.of(courseCode).filter(student.entrolledCourses()::add).orElseThrow(()->new EntrollmentException("Course does not exist"));
     }
     public List<Student> getStudentsInCourse(String courseCode) {
         return students.values().stream().filter(s->s.entrolledCourses().contains(courseCode)).toList();

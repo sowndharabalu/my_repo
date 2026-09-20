@@ -30,7 +30,7 @@ class EmployeeAnalyzer{
         return employees.stream().collect(Collectors.groupingBy(Employee::dept,Collectors.maxBy(Comparator.comparingInt(Employee::performanceRating))));
     }
     static List<Employee> getSortedEmployees(List<Employee> employees){
-        return employees.stream().sorted(Comparator.comparingInt(Employee::performanceRating).thenComparingDouble(Employee::salary).thenComparing(Employee::name)).toList();
+        return employees.stream().sorted(Comparator.comparingInt(Employee::performanceRating).reversed().thenComparingDouble(Employee::salary).reversed().thenComparing(Employee::name)).toList();
     }
     static Map<String,Integer> getExperienceYears(List<Employee> employees){
         return employees.stream().collect(Collectors.toMap(Employee::name,e->(int)ChronoUnit.YEARS.between(e.joinDate(),LocalDate.now()),(exist,replacement)->exist));
@@ -42,7 +42,7 @@ class EmployeeAnalyzer{
         return employees.stream().collect(Collectors.groupingBy(Employee::dept,Collectors.summarizingDouble(Employee::salary)));
     }
     static List<Employee> findAboveAverageSalary(List<Employee> employees){
-        Map<Department,Double> result = getAverageSalaryByDept(employees);
+        Map<Department,Double> result = employees.stream().collect(Collectors.groupingBy(Employee::dept,Collectors.averagingDouble(Employee::salary)));
         return employees.stream().filter(e->e.salary()>result.getOrDefault(e.dept(),0.0)).toList();
     }
 }

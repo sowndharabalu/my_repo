@@ -16,16 +16,11 @@ class TextProcessor {
         return Arrays.stream(s.split(" ")).collect(Collectors.groupingBy(s1->s1, Collectors.counting()));
     }
     static Optional<String> findLongestWord(String text){
-        return Arrays.stream(text.split(" ")).max(Comparator.comparingInt(String::length));
+        return Arrays.stream(text.replaceAll("\\p{Punct}","").split("\\s+")).filter(s->!s.isEmpty()).max(Comparator.comparingInt(String::length));
     }
     private static boolean palidrome(String text){
-        int i=0,j=text.length()-1;
-        while(i<j){
-            if(text.charAt(i)!=text.charAt(j)){
-                return false;
-            }
-        }
-        return true;
+        String cleaned = text.toLowerCase();
+        return cleaned.contentEquals(new StringBuilder(cleaned).reverse());
     }
     static List<String> findPalindromes(String text){
         return Arrays.stream(text.split(" ")).map(String::toLowerCase).filter(s->s.length()>2 && palidrome(s)).toList();
@@ -37,13 +32,13 @@ class TextProcessor {
         return countWordFrequency(text).keySet().stream().filter(s -> s.startsWith(prefix)).sorted().collect(Collectors.toList());
     }
     static String maskNumbers(String text){
-        return text.replaceAll("[0-9]", "#NUM#");
+        return text.replaceAll("\\d+", "#NUM#");
     }
     static List<String> extractEmails(String text){
         return email.matcher(text).results().map(MatchResult::group).distinct().toList();
     }
     static double getAverageWordLength(String text){
-        return countWordFrequency(text).values().stream().mapToDouble(Long::doubleValue).average().getAsDouble();
+        return Arrays.stream(text.replaceAll("\\p{Punct}","").split("\\s")).filter(s->!s.isEmpty()).mapToInt(String::length).average().orElse(0.0);
     }
     static Map<String, List<String>> findAnagrams(String text){
         if (text == null || text.isBlank()) {

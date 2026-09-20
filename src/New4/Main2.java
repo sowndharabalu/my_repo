@@ -84,9 +84,9 @@ class Grocery extends Product {
     @Override
     double calculateDiscount() {
         if (expiryDate.isBefore(LocalDate.now())) {
-            return 0;
+            return getPrice() * 0.5;
         }
-        return getPrice() * 0.5;
+        return 0;
     }
 }
 

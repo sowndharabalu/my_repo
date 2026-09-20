@@ -34,7 +34,7 @@ class Account{
             throw new IllegalArgumentException("Amount must be positive");
         }
         this.balance+=amount;
-        transactions.add(new Transaction(accountNumber, TransactionType.DEBIT, amount, LocalDateTime.now(), category));
+        transactions.add(new Transaction(accountNumber, TransactionType.CREDIT, amount, LocalDateTime.now(), category));
     }
     public void withdraw(double amount, String category) throws InsufficientFundsException{
         if(amount<=0){
@@ -44,7 +44,7 @@ class Account{
             throw new InsufficientFundsException("Insufficient funds");
         }
         this.balance-=amount;
-        transactions.add(new Transaction(accountNumber, TransactionType.CREDIT, amount, LocalDateTime.now(), category));
+        transactions.add(new Transaction(accountNumber, TransactionType.DEBIT, amount, LocalDateTime.now(), category));
     }
     public double getBalance(){
         return balance;
@@ -68,7 +68,7 @@ class TransactionAnalyzer{
         return accounts.stream().flatMap(a->a.getTransactions().stream()).filter(t->t.type()==TransactionType.DEBIT).mapToDouble(Transaction::amount).sum();
     }
     static List<Transaction> getLargeTransactions(List<Account> accounts,double threshold){
-        return accounts.stream().flatMap(a->a.getTransactions().stream()).filter(t->t.amount()>threshold).sorted(Comparator.comparingDouble(Transaction::amount)).toList();
+        return accounts.stream().flatMap(a->a.getTransactions().stream()).filter(t->t.amount()>threshold).sorted(Comparator.comparingDouble(Transaction::amount).reversed()).toList();
     }
     static Map<String,Double> sumByCategory(List<Account> accounts){
         return accounts.stream().flatMap(a->a.getTransactions().stream()).collect(Collectors.groupingBy(t->t.category(),Collectors.summingDouble(Transaction::amount)));
